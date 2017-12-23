@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >    
+<mapper namespace="com.yitai.dao.AlarmInfoDao" >      
+    
+
+        
+  
+  	<!-- 插入火情详细信息 -->
+    <!-- useGeneratedKeys 取值范围true|false 默认值是：false。 
+  	        含义：设置是否使用JDBC的getGenereatedKeys方法
+  	        获取主键并赋值到keyProperty设置的领域模型属性中。
+  	        
+  	   now() 函数返回当前的日期和时间 
+    -->
+  	<insert id="insert" useGeneratedKeys="true" keyProperty="aId" parameterType="AlarmInfo">
+		insert into alarminfo values(null,#{aLocation},#{aFlag},now())
+	</insert>
+</mapper>    

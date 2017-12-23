@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>    
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >    
+<mapper namespace="com.yitai.dao.FacilityDao" >      
+    
+    <!-- 配置映射的消防设备信息 -->
+		<!-- id：指定查询列中的唯 一标识，消防设备信息的中的唯 一标识，如果有多个列组成唯一标识，配置多个id
+			column：消防设备信息的唯 一标识 列
+			property：消防设备信息的唯 一标识 列所映射到Facility中哪个属性
+		  -->
+    <resultMap id="FacilityResultMap" type="Facility">    
+        <result column="fId" property="fId" jdbcType="INTEGER" />    
+        <result column="fName" property="fName" jdbcType="VARCHAR" />    
+        <result column="fModelNumber" property="fModelNumber" jdbcType="VARCHAR" />    
+        <result column="fProDate" property="fProDate" jdbcType="DATE" />   
+        <result column="fExpTime" property="fExpTime" jdbcType="INTEGER"/>
+        <result column="fProducter" property="fProducter" jdbcType="VARCHAR"/>
+        <result column="fContaction" property="fContaction" jdbcType="VARCHAR"/>
+        <result column="fImageUrl" property="fImageUrl" jdbcType="VARCHAR"/>
+        <result column="fLocation" property="fLocation" jdbcType="VARCHAR"/>
+        
+        <!-- 配置映射的关联的地域信息 -->
+		<!-- association：用于映射关联查询单个对象的信息
+		     property：要将关联查询的地域信息映射到Facility中哪个属性
+		     javaType：要将地域信息映射到哪个实体类
+		 -->
+		 <association property="area"  javaType="Area">
+			<!-- id：关联查询地域的唯 一标识
+			column：指定唯 一标识地域信息的列
+			property:映射到实体类Area中的哪个属性
+			 -->
+			<id column="areaId" property="areaId" />
+			<result column="areaName" property="areaName"/>
+			
+			<!-- 配置映射的关联的管理员信息 -->
+			<!-- association：用于映射关联查询单个对象的信息
+				 property：要将关联查询的管理员信息映射到Area中哪个属性
+				 javaType：要将管理员信息映射到哪个实体类
+		 	-->
+		 	<association property="manager" javaType="Manager">
+		 		<id column="mId" property="mId" />
+				<result column="mName" property="mName"/>
+		 	</association>
+		</association>
+		 
+    </resultMap>
+    
+    <!-- 根据Id查询设备的相关信息-->    
+    <select id="findOne" resultMap="FacilityResultMap"    
+        parameterType="java.lang.Integer">    
+        select f.*,
+        m.mName,
+        a.areaName
+        from Facility f,
+        Manager m,
+        Area a
+        where f.fId = #{id,jdbcType=INTEGER} 
+        and f.areaId=a.areaId  
+        and a.areaId=m.areaId   
+    </select>    
+        
+    
+    <!-- 根据Id更新设备信息 -->
+    <update id="update" parameterType="Facility">
+		update facility
+		<set>
+			<if test="fName!=null and fName!='' ">
+				fName=#{fName},
+			</if>
+			<if test="fModelNumber!=null and fModelNumber!='' ">
+				fModelNumber=#{fModelNumber},
+			</if>
+			<if test="fProDate!=null and fProDate!='' ">
+				fProDate=#{fProDate},
+			</if>
+			<if test="fExpTime!=null and fExpTime!='' ">
+				fExpTime=#{fExpTime},
+			</if>
+		</set>
+		where fId=#{fId}
+	</update>
+	
+	
+  
+</mapper>    
